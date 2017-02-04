@@ -14,9 +14,11 @@
         <li><%= link_to "Blocipedia", root_path %></li>
 
         <% if user_signed_in? %>
-          Signed in as: <strong><%= current_user.email %></strong>
-          <%= link_to "Edit profile", edit_user_registration_path, class: "navbar-link" %> -
-          <%= link_to "Sign out", destroy_user_session_path, method: :delete, class: "navbar-link" %>
+          <div class="pull-right user-info">
+            Signed in as: <strong><%= current_user.email %></strong>
+            <%= link_to "Edit profile", edit_user_registration_path, class: "navbar-link" %> -
+            <%= link_to "Sign out", destroy_user_session_path, method: :delete, class: "navbar-link" %>
+          </div>
         <% else %>
           <div class="pull-right user-info">
             <%= link_to "Sign up", new_user_registration_path %>&emsp;<%= link_to "Sign in", new_user_session_path %>
