@@ -4,7 +4,7 @@
 <div class="jumbotron">
   <% if user_signed_in? %>
     <h2>Hello, <%= current_user.first_name %>!</h2>
-    <%= link_to "Create new wiki", new_user_registration_path, class: "btn btn-primary" %>
+    <%= link_to "Create new wiki", root_path, class: "btn btn-primary" %>
   <% else %>
     <h2>Create and share Markdown Wikis</h2>
     <%= link_to "Sign up", new_user_registration_path, class: "btn btn-primary" %>
