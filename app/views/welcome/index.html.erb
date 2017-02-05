@@ -2,8 +2,13 @@
   <h1>Blocipedia <small>Social, Markdown Wikis</small></h1>
 </div>
 <div class="jumbotron">
-  <h2>Create and share Markdown Wikis</h2>
-  <p><a href="#" class="btn btn-primary">Sign up</a></p>
+  <% if user_signed_in? %>
+    <h2>Hello, <%= current_user.first_name %>!</h2>
+    <%= link_to "Create new wiki", root_path, class: "btn btn-primary" %>
+  <% else %>
+    <h2>Create and share Markdown Wikis</h2>
+    <%= link_to "Sign up", new_user_registration_path, class: "btn btn-primary" %>
+  <% end %>
 </div>
 <div class="row">
   <div class="col-md-6">
