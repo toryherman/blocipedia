@@ -1,0 +1,20 @@
+<div>
+  <h1>
+    <%= @wiki.title %><br>
+    <small>
+      updated <%= time_ago_in_words(@wiki.updated_at) %> ago by <%= @wiki.user.first_name + " " + @wiki.user.last_name %>
+    </small>
+  </h1>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <p><%= @wiki.body %></p>
+  </div>
+
+  <% if current_user == @wiki.user %>
+    <div class="col-md-4">
+      <%= link_to "Edit", edit_wiki_path(@wiki), class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+</div>

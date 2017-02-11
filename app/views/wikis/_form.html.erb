@@ -1,0 +1,37 @@
+<%= form_for wiki do |f| %>
+  <% if wiki.errors.any? %>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(wiki.errors.count, "error") %>.</h4>
+      <ul>
+        <% wiki.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_group_tag(wiki.errors[:title]) do %>
+    <%= f.label :title %><br>
+    <%= f.text_field :title, class: "form-control", placeholder: "Enter wiki title", autofocus: true %>
+  <% end %>
+
+  <%= form_group_tag(wiki.errors[:body]) do %>
+    <%= f.label :body %><br>
+    <%= f.text_area :body, rows: 24, class: "form-control", placeholder: "Enter wiki body" %>
+  <% end %>
+
+  <%= form_group_tag(wiki.errors[:private]) do %>
+    <%= f.label :private do %>
+      <%= f.check_box :private %> Private
+    <% end %>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.submit "Save", class: 'btn btn-success' %>
+    <% if current_page?(action: 'new') %>
+      <%= link_to "Cancel", :back, class: 'btn btn-danger' %>
+    <% elsif current_page?(action: 'edit') %>
+      <%= link_to "Delete wiki", @wiki, class: 'btn btn-danger', method: :delete, data: { confirm: 'Are you sure you want to delete this wiki?' } %>
+    <% end %>
+  </div>
+<% end %>
