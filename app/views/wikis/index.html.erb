@@ -2,14 +2,18 @@
 
 <div class="row">
   <div class="col-md-8">
-    <% @wikis.each do |wiki| %>
+    <% @wikis.reject(&:private).each do |wiki| %>
+      <% updater = User.find_by_id(wiki.updated_by) %>
       <div class="media">
         <div class="media-body">
           <h4 class="media-heading">
             <%= link_to wiki.title, wiki %>
           </h4>
           <small>
-            updated <%= time_ago_in_words(wiki.updated_at) %> ago by <%= wiki.user.first_name + " " + wiki.user.last_name %>
+            updated <%= time_ago_in_words(wiki.updated_at) %> ago by <%= updater.first_name + " " + updater.last_name %>
+            <% if updater.admin? %>
+              <span class="user-role-admin"><%= updater.role %></span>
+            <% end %>
           </small>
         </div>
       </div>

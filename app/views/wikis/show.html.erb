@@ -2,7 +2,10 @@
   <h1>
     <%= @wiki.title %><br>
     <small>
-      updated <%= time_ago_in_words(@wiki.updated_at) %> ago by <%= @wiki.user.first_name + " " + @wiki.user.last_name %>
+      updated <%= time_ago_in_words(@wiki.updated_at) %> ago by <%= @updater.first_name + " " + @updater.last_name %>
+      <% if @updater.admin? %>
+        <span class="user-role-admin"><%= @updater.role %></span>
+      <% end %>
     </small>
   </h1>
 </div>
@@ -12,7 +15,7 @@
     <p><%= @wiki.body %></p>
   </div>
 
-  <% if current_user == @wiki.user %>
+  <% if current_user %>
     <div class="col-md-4">
       <%= link_to "Edit", edit_wiki_path(@wiki), class: 'btn btn-primary' %>
     </div>

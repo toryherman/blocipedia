@@ -2,9 +2,8 @@ require 'rails_helper'
 
 RSpec.describe WikisController, type: :controller do
   let(:my_user) { create(:user) }
-  let(:other_user) { create(:user) }
+  let(:admin) { create(:user, role: "admin") }
   let(:my_wiki) { create(:wiki, user: my_user) }
-  let(:private_wiki) { create(:wiki, private: true) }
 
   context "guest" do
     describe "GET #index" do
@@ -70,96 +69,7 @@ RSpec.describe WikisController, type: :controller do
     end
   end
 
-  context "member doing CRUD on wiki they don't own" do
-    before do
-      sign_in other_user
-    end
-
-    describe "GET #index" do
-      it "returns http success" do
-        get :index
-        expect(response).to have_http_status(:success)
-      end
-    end
-
-    describe "GET #show" do
-      it "returns http success" do
-        get :show, params: { id: my_wiki.id  }
-        expect(response).to have_http_status(:success)
-      end
-
-      it "renders the #show view" do
-        get :show, params: { id: my_wiki.id  }
-        expect(response).to render_template :show
-      end
-
-      it "assigns my_wiki to @wiki" do
-        get :show, params: { id: my_wiki.id  }
-        expect(assigns(:wiki)).to eq(my_wiki)
-      end
-    end
-
-    describe "GET #new" do
-      it "returns http success" do
-        get :new
-        expect(response).to have_http_status(:success)
-      end
-
-      it "renders the #new view" do
-        get :new
-        expect(response).to render_template :new
-      end
-
-      it "instantiates @wiki" do
-        get :new
-        expect(assigns(:wiki)).not_to be_nil
-      end
-    end
-
-    describe "POST #create" do
-      it "increases the number of Wiki by 1" do
-        expect{ post :create, params:
-          { wiki: { title: RandomData.random_sentence, body: RandomData.random_paragraph, private: false, user: my_user } }
-        }.to change(Wiki, :count).by(1)
-      end
-
-      it "assigns the new wiki to @wiki" do
-        post :create, params: { wiki: { title: RandomData.random_sentence, body: RandomData.random_paragraph, private: false, user: my_user } }
-        expect(assigns(:wiki)).to eq Wiki.last
-      end
-
-      it "redirects to the new wiki" do
-        post :create, params: { wiki: { title: RandomData.random_sentence, body: RandomData.random_paragraph, private: false, user: my_user } }
-        expect(response).to redirect_to Wiki.last
-      end
-    end
-
-    describe "GET #edit" do
-      it "returns http redirect" do
-        get :edit, params: { id: my_wiki.id }
-        expect(response).to redirect_to my_wiki
-      end
-    end
-
-    describe "PUT #update" do
-      it "returns http redirect" do
-        new_title = RandomData.random_sentence
-        new_body = RandomData.random_paragraph
-
-        put :update, params: { id: my_wiki.id, wiki: { title: new_title, body: new_body } }
-        expect(response).to redirect_to my_wiki
-      end
-    end
-
-    describe "DELETE #destroy" do
-      it "returns http redirect" do
-        delete :destroy, params: { id: my_wiki.id }
-        expect(response).to redirect_to my_wiki
-      end
-    end
-  end
-
-  context "member doing CRUD on wiki they own" do
+  context "standard member doing CRUD" do
     before do
       sign_in my_user
     end
@@ -265,6 +175,24 @@ RSpec.describe WikisController, type: :controller do
 
         expect(response).to redirect_to my_wiki
       end
+    end
+
+    describe "DELETE #destroy" do
+      it "flashes error" do
+        delete :destroy, params: { id: my_wiki.id }
+        expect(flash[:alert]).to be_present
+      end
+
+      it "returns http redirect" do
+        delete :destroy, params: { id: my_wiki.id }
+        expect(response).to have_http_status(:redirect)
+      end
+    end
+  end
+
+  context "admin doing CRUD" do
+    before do
+      sign_in admin
     end
 
     describe "DELETE #destroy" do
