@@ -1,8 +1,8 @@
 FactoryGirl.define do
   factory :user do
-    first_name RandomData.random_word
-    last_name RandomData.random_word
-    sequence(:email) { |n| "user#{n}@factory.com" }
+    first_name { Faker::Name.first_name }
+    last_name { Faker::Name.last_name }
+    email { Faker::Internet.unique.email }
     password "password"
     password_confirmation "password"
     confirmed_at Time.now

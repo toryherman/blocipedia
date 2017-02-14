@@ -5,3 +5,39 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+25.times do
+  User.create!(
+    email: Faker::Internet.unique.email,
+    first_name: Faker::Name.first_name,
+    last_name: Faker::Name.last_name,
+    password: "password",
+    password_confirmation: "password",
+    confirmed_at: Time.now,
+    role: rand(0..2)
+  )
+end
+
+me = User.create!(
+  email: "tory.herman12@gmail.com",
+  first_name: "Tory",
+  last_name: "Herman",
+  password: "password",
+  password_confirmation: "password",
+  confirmed_at: Time.now,
+  role: "admin"
+)
+
+users = User.all
+
+50.times do
+  Wiki.create!(
+    title: Faker::Lorem.sentence,
+    body: Faker::Lorem.paragraph,
+    private: [true, false].sample,
+    user: users.sample
+  )
+end
+
+puts "Seed finished"
+puts "#{User.count} users created"
+puts "#{Wiki.count} wikis created"
