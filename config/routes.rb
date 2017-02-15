@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   resources :wikis
+  resources :charges
 
   get 'welcome/index'
   root 'welcome#index'
