@@ -21,7 +21,7 @@ class ChargesController < ApplicationController
     flash[:notice] = "Thanks for upgrading to a premium membership, #{current_user.first_name}!"
     current_user.role = "premium"
     current_user.save!
-    redirect_to edit_user_registration_path
+    redirect_to root_path
 
   rescue Stripe::CardError => e
     flash[:error] = e.message

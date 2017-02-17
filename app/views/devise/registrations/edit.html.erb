@@ -3,42 +3,47 @@
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
   <%= devise_error_messages! %>
 
-  <div class="form-group">
-    <%= f.label :first_name %><br />
-    <%= f.text_field :first_name, class: "form-control", autofocus: true %>
-  </div>
+  <div>
+    <h3>User profile</h3>
+    <div class="form-group">
+      <%= f.label :first_name %><br />
+      <%= f.text_field :first_name, class: "form-control", autofocus: true %>
+    </div>
 
-  <div class="form-group">
-    <%= f.label :last_name %><br />
-    <%= f.text_field :last_name, class: "form-control" %>
-  </div>
+    <div class="form-group">
+      <%= f.label :last_name %><br />
+      <%= f.text_field :last_name, class: "form-control" %>
+    </div>
 
-  <div class="form-group">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, class: "form-control" %>
-  </div>
+    <div class="form-group">
+      <%= f.label :email %><br />
+      <%= f.email_field :email, class: "form-control" %>
+    </div>
 
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-  <% end %>
-
-  <div class="form-group">
-    <%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
-    <%= f.password_field :password, class: "form-control", autocomplete: "off" %>
-    <% if @minimum_password_length %>
-      <br />
-      <em><%= @minimum_password_length %> characters minimum</em>
+    <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+      <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
     <% end %>
   </div>
 
-  <div class="form-group">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, class: "form-control", autocomplete: "off" %>
-  </div>
+  <div>
+    <h3>Password</h3>
+    <div class="form-group">
+      <%= f.label :password %> <small><i>(leave blank if you don't want to change it)</i></small><br />
+      <%= f.password_field :password, class: "form-control", autocomplete: "off" %>
+      <% if @minimum_password_length %>
+        <small><em><%= @minimum_password_length %> characters minimum</em></small>
+      <% end %>
+    </div>
 
-  <div class="form-group">
-    <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
-    <%= f.password_field :current_password, class: "form-control", autocomplete: "off" %>
+    <div class="form-group">
+      <%= f.label :password_confirmation %><br />
+      <%= f.password_field :password_confirmation, class: "form-control", autocomplete: "off" %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :current_password %> <small><i>(enter current password to change)</i></small><br />
+      <%= f.password_field :current_password, class: "form-control", autocomplete: "off" %>
+    </div>
   </div>
 
   <p><strong>Account status: <%= current_user.role %></strong></p>
@@ -48,23 +53,50 @@
   </div>
 <% end %>
 
-<% if current_user.role == "standard" %>
-  <h3>Upgrade to premium</h3>
-  <p>Upgrade your account status to premium for only <strong>$15.00!</strong></p>
-  <%= link_to "Upgrade", new_charge_path, class: "btn btn-success" %>
-<% elsif current_user.role == "premium" %>
-  <h3>Downgrade account</h3>
-  <p>Downgrade to a free account.</p>
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-    <div class="form-group">
-      <%= f.hidden_field :role, value: "standard" %>
-      <%= f.submit "Downgrade", class: "btn btn-danger" %>
+<div class="row">
+  <% if current_user.role == "standard" %>
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Upgrade to premium</h3>
+        </div>
+        <div class="panel-body">
+          <p>Upgrade your account status to premium for only <strong>$15.00!</strong></p>
+          <!-- <%= link_to "Upgrade", new_charge_path, class: "btn btn-success" %> -->
+          <%= render template: 'charges/new' %>
+        </div>
+      </div>
+    </div>
+  <% elsif current_user.role == "premium" || current_user.role == "admin" %>
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Downgrade account</h3>
+        </div>
+        <div class="panel-body">
+          <p>Downgrade to a free standard account.</p>
+          <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+            <div class="form-group">
+              <%= f.hidden_field :role, value: "standard" %>
+              <%= f.submit "Downgrade", class: "btn btn-danger" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
     </div>
   <% end %>
-<% end %>
 
-<h3>Cancel my account</h3>
-
-<p>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), class: "btn btn-danger", data: { confirm: "Are you sure?" }, method: :delete %></p>
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Cancel my account</h3>
+      </div>
+      <div class="panel-body">
+        <p>Unhappy with your Blocipedia experience?</p>
+        <%= button_to "Cancel my account", registration_path(resource_name), class: "btn btn-danger", data: { confirm: "Are you sure?" }, method: :delete %>
+      </div>
+    </div>
+  </div>
+</div>
 
 <%= link_to "Back", :back %>

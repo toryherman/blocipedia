@@ -11,24 +11,60 @@
   <% end %>
 </div>
 <div class="row">
-  <div class="col-md-6">
-    <div class="thumbnail">
-      <img src="http://placehold.it/800x500/eee/000?text=Free+Plan">
-      <div class="caption">
-        <h3>Free Plan</h3>
-        <p>Create as many public wikis as you want!</p>
-        <%= link_to "Learn more", root_path, class: "btn btn-primary" %>
+  <% if !current_user %>
+    <div class="col-md-6">
+      <div class="thumbnail">
+        <img src="http://placehold.it/800x500/eee/000?text=Free+Plan">
+        <div class="caption">
+          <h3>Free Plan</h3>
+          <p>Create as many public wikis as you want!</p>
+          <%= link_to "Learn more", root_path, class: "btn btn-primary" %>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="col-md-6">
-    <div class="thumbnail">
-      <img src="http://placehold.it/800x500/eee/000?text=+Premium+">
-      <div class="caption">
-        <h3>Premium Plan</h3>
-        <p>Create private wikis!</p>
-        <%= link_to "Upgrade", new_charge_path, class: "btn btn-primary", method: :get %>
+    <div class="col-md-6">
+      <div class="thumbnail">
+        <img src="http://placehold.it/800x500/eee/000?text=+Premium+">
+        <div class="caption">
+          <h3>Premium Plan</h3>
+          <p>Create private wikis and much more for only <strong>$15.00!</strong></p>
+          <%= link_to "Learn more", new_user_registration_path, class: "btn btn-primary", method: :get %>
+        </div>
       </div>
     </div>
-  </div>
+  <% else %>
+    <div class="col-md-6">
+      <div class="thumbnail">
+        <img src="http://placehold.it/800x500/eee/000?text=Public+Wikis">
+        <div class="caption">
+          <h3>Public Wikis</h3>
+          <p>View wikis accessible to everyone.</p>
+          <%= link_to "View wikis", wikis_path, class: "btn btn-primary" %>
+        </div>
+      </div>
+    </div>
+    <% if current_user.role != "premium" %>
+      <div class="col-md-6">
+        <div class="thumbnail">
+          <img src="http://placehold.it/800x500/eee/000?text=+Premium+">
+          <div class="caption">
+            <h3>Premium Plan</h3>
+            <p>Create private wikis and much more for only <strong>$15.00!</strong></p>
+            <%= render template: 'charges/new' %>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <div class="col-md-6">
+        <div class="thumbnail">
+          <img src="http://placehold.it/800x500/eee/000?text=+Private+Wikis">
+          <div class="caption">
+            <h3>Private Wikis</h3>
+            <p>View my private wikis.</p>
+            <%= link_to "View wikis", wikis_path, class: "btn btn-primary" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
 </div>
