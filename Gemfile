@@ -23,6 +23,7 @@ group :development, :test do
   gem 'factory_girl_rails', "~> 4.0"
   gem 'pry-rails'
   gem 'rails-controller-testing'
+  gem 'stripe-ruby-mock', '~> 2.4.0', :require => 'stripe_mock'
 end
 
 gem 'sass-rails', '~> 5.0'

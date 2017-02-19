@@ -9,7 +9,7 @@ RSpec.describe Users::RegistrationsController, type: :controller do
     {
       first_name: "First",
       last_name: "Last",
-      email: "email@bloc.io",
+      email: "email@email",
       password: "password",
       password_confirmation: "password"
     }
@@ -93,7 +93,7 @@ RSpec.describe Users::RegistrationsController, type: :controller do
         User.create!(
           first_name: "First",
           last_name: "Last",
-          email: "email@bloc.io",
+          email: "email@email",
           password: "password",
           password_confirmation: "different")
       }.to raise_error("Validation failed: Password confirmation doesn't match Password")
@@ -104,7 +104,7 @@ RSpec.describe Users::RegistrationsController, type: :controller do
         User.create!(
           first_name: "First",
           last_name: "Last",
-          email: "email@bloc.io",
+          email: "email@email",
           password: "pass",
           password_confirmation: "pass")
       }.to raise_error("Validation failed: Password is too short (minimum is 6 characters)")
@@ -115,10 +115,64 @@ RSpec.describe Users::RegistrationsController, type: :controller do
         User.create!(
           first_name: "First",
           last_name: "",
-          email: "email@bloc.io",
+          email: "email@email",
           password: "password",
           password_confirmation: "password")
       }.to raise_error("Validation failed: Last name is too short (minimum is 1 character), Last name can't be blank")
+    end
+  end
+
+  describe "GET edit" do
+    before do
+      @my_user = FactoryGirl.create(:user)
+      sign_in @my_user
+    end
+
+    it "returns http success" do
+      get :edit, params: { id: @my_user.id }
+      expect(response).to have_http_status(:success)
+    end
+
+    it "renders the edit view" do
+      get :edit, params: { id: @my_user.id }
+      expect(response).to render_template :edit
+    end
+  end
+
+  describe "PUT update" do
+    before do
+      @my_user = FactoryGirl.create(:user)
+      sign_in @my_user
+    end
+
+    it "updates user with expected attributes" do
+      put :update, params: { id: @my_user.id, user: { role: "premium" } }
+
+      updated_user = assigns(:user)
+      expect(updated_user.role).to eq("premium")
+    end
+
+    it "redirects to the root view" do
+      put :update, params: { id: @my_user.id, user: { role: "premium" } }
+      expect(response).to redirect_to root_path
+    end
+  end
+
+  describe "DELETE destroy" do
+    before do
+      @my_user = FactoryGirl.create(:user)
+      sign_in @my_user
+    end
+
+    it "deletes the user" do
+      delete :destroy, params: { id: @my_user.id }
+      count = User.where({id: @my_user.id}).size
+      expect(count).to eq 0
+    end
+
+    it "redirects to root view" do
+      delete :destroy, params: { id: @my_user.id }
+      expect(response).to redirect_to root_path
     end
   end
 end

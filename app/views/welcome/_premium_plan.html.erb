@@ -1,0 +1,14 @@
+<div class="col-md-6">
+  <div class="thumbnail">
+    <img src="http://placehold.it/800x500/eee/000?text=+Premium+">
+    <div class="caption">
+      <h3>Premium Plan</h3>
+      <p>Create private wikis and much more for only <strong>$15.00!</strong></p>
+      <% if current_user %>
+        <%= render template: 'charges/new' %>
+      <% else %>
+        <%= link_to "Learn more", new_user_registration_path, class: "btn btn-primary", method: :get %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -11,7 +11,11 @@
 
   <%= hidden_field_tag 'stripeToken' %>
   <%= hidden_field_tag 'stripeEmail' %>
-  <button class="btn btn-success" id="custom-stripe-button">Upgrade</button>
+  <% unless current_page?(root_path) %>
+    <button class="btn btn-success" id="custom-stripe-button">Upgrade</button>
+  <% else %>
+    <button class="btn btn-primary" id="custom-stripe-button">Upgrade</button>
+  <% end %>
 
   <script>
     var handler = StripeCheckout.configure({
