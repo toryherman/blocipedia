@@ -1,10 +1,14 @@
 <div>
   <h1>
-    <%= @wiki.title %><br>
+    <%= @wiki.title %>
+    <% if @wiki.private %>
+      <span class="info private-post">P</span>
+    <% end %>
+    <br>
     <small>
       updated <%= time_ago_in_words(@wiki.updated_at) %> ago by <%= @updater.first_name + " " + @updater.last_name %>
       <% if @updater.admin? %>
-        <span class="user-role-admin"><%= @updater.role %></span>
+        <span class="info user-role-admin"><%= @updater.role %></span>
       <% end %>
     </small>
   </h1>

@@ -4,5 +4,6 @@ FactoryGirl.define do
     body { Faker::Lorem.paragraph }
     private false
     user
+    updated_by { user.id }
   end
 end

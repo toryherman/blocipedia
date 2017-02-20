@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
   private
 
   def user_not_authorized(exception)
-    flash[:alert] = "You must be an admit to do that."
+    flash[:alert] = "You do not have access to that."
     redirect_to(request.referrer || root_path)
   end
 end

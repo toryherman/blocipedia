@@ -29,12 +29,30 @@ me = User.create!(
 
 users = User.all
 
-50.times do
+40.times do
   Wiki.create!(
     title: Faker::Lorem.sentence,
     body: Faker::Lorem.paragraph,
-    private: [true, false].sample,
+    private: false,
     user: users.sample
+  )
+end
+
+5.times do
+  Wiki.create!(
+    title: Faker::Lorem.sentence,
+    body: Faker::Lorem.paragraph,
+    private: true,
+    user: users.where(role: "admin").sample
+  )
+end
+
+5.times do
+  Wiki.create!(
+    title: Faker::Lorem.sentence,
+    body: Faker::Lorem.paragraph,
+    private: true,
+    user: users.where(role: "premium").sample
   )
 end
 

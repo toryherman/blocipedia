@@ -1,14 +1,15 @@
 class WikisController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index]
-  after_action :verify_authorized, except: [:show, :index]
+  after_action :verify_authorized, except: [:index]
 
   def index
-    @wikis = Wiki.all
+    @wikis = policy_scope(Wiki)
   end
 
   def show
     @wiki = Wiki.find(params[:id])
     @updater = User.find_by_id(@wiki.updated_by)
+    authorize @wiki
   end
 
   def new
@@ -68,6 +69,6 @@ class WikisController < ApplicationController
 
   private
   def wiki_params
-    params.require(:wiki).permit(:title, :body, :private)
+    params.require(:wiki).permit(:title, :body, :private, :updated_by)
   end
 end

@@ -2,8 +2,9 @@ require 'rails_helper'
 
 RSpec.describe WikisController, type: :controller do
   let(:my_user) { create(:user) }
-  let(:admin) { create(:user, role: "admin") }
+  let(:my_admin) { create(:user, role: "admin") }
   let(:my_wiki) { create(:wiki, user: my_user) }
+  let(:private_wiki) { create(:wiki, user: my_admin, private: true) }
 
   context "guest" do
     describe "GET #index" do
@@ -96,6 +97,11 @@ RSpec.describe WikisController, type: :controller do
         get :show, params: { id: my_wiki.id  }
         expect(assigns(:wiki)).to eq(my_wiki)
       end
+
+      it "returns http redirect for private wiki" do
+        get :show, params: { id: private_wiki.id }
+        expect(response).to redirect_to root_path
+      end
     end
 
     describe "GET #new" do
@@ -118,7 +124,7 @@ RSpec.describe WikisController, type: :controller do
     describe "POST #create" do
       it "increases the number of Wiki by 1" do
         expect{ post :create, params:
-          { wiki: { title: title: Faker::Lorem.sentence, body: Faker::Lorem.paragraph, private: false, user: my_user } }
+          { wiki: { title: Faker::Lorem.sentence, body: Faker::Lorem.paragraph, private: false, user: my_user } }
         }.to change(Wiki, :count).by(1)
       end
 
@@ -192,7 +198,14 @@ RSpec.describe WikisController, type: :controller do
 
   context "admin doing CRUD" do
     before do
-      sign_in admin
+      sign_in my_admin
+    end
+
+    describe "GET #show" do
+      it "returns http success for private wiki" do
+        get :show, params: { id: private_wiki.id }
+        expect(response).to have_http_status(:success)
+      end
     end
 
     describe "DELETE #destroy" do
