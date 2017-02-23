@@ -1,11 +1,30 @@
 class WikiPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
-      if user.present? && ( user.admin? || user.role == "premium" )
-        scope.all
+      wikis = []
+      all = scope.all
+
+      if user.present?
+        if user.admin?
+          wikis = all
+        elsif user.role == "premium"
+          all.each do |wiki|
+            if !wiki.private || wiki.created_by == user || wiki.collaborators.include?(user)
+              wikis << wiki
+            end
+          end
+        else
+          all.each do |wiki|
+            if !wiki.private || wiki.collaborators.include?(user)
+              wikis << wiki
+            end
+          end
+        end
       else
-        scope.where(private: false)
+        wikis = scope.where(private: false)
       end
+
+      wikis
     end
   end
 

@@ -8,6 +8,7 @@ class User < ApplicationRecord
           :rememberable, :trackable, :validatable, :confirmable
 
   has_many :wikis, dependent: :destroy
+  has_many :collaborators, dependent: :destroy
 
   after_initialize :init
   after_save :downgrade_wikis
@@ -18,7 +19,7 @@ class User < ApplicationRecord
   enum role: [:standard, :premium, :admin]
 
   private
-  
+
   def init
     self.role ||= :standard if self.new_record?
   end

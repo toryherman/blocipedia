@@ -21,6 +21,31 @@
   <% end %>
 
   <% if current_user.role == "premium" || current_user.role == "admin" %>
+    <h4>Collaborators</h4>
+    <div class="collaborators row">
+      <div class="col-md-8">
+        <% if wiki.collaborators.any? %>
+          <ul>
+            <% wiki.collaborators.each do |c| %>
+              <li class="btn btn-default"><%= c.user.first_name + " " + c.user.last_name %>
+                <%= link_to [wiki, Collaborator.find_by_user_id(c.user.id)], method: :delete do %>
+                  <b>&times;</b>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p>No collaborators yet!</p>
+        <% end %>
+      </div>
+      <div class="col-md-4">
+        <% if current_user.admin? || current_user.role == "premium" %>
+          <%= link_to [wiki, Collaborator.new], class: 'btn btn-primary pull-right', method: :post do %>
+            Add collaborator
+          <% end %>
+        <% end %>
+      </div>
+    </div>
     <%= form_group_tag(wiki.errors[:private]) do %>
       <%= f.label :private do %>
         <%= f.check_box :private %> Private
