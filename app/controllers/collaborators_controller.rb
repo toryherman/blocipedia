@@ -1,7 +1,14 @@
 class CollaboratorsController < ApplicationController
   def create
     wiki = Wiki.find(params[:wiki_id])
-    collaborator = current_user.collaborators.build(wiki: wiki)
+
+    unless wiki.collaborators.find_by_user_id(current_user.id)
+      collaborator = current_user.collaborators.build(wiki: wiki)
+    else
+      flash[:alert] = "That user is already a collaborator."
+      redirect_to :back
+      return
+    end
 
     if collaborator.save
       flash[:notice] = "Collaborator added."
