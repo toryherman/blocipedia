@@ -1,34 +1,41 @@
 class CollaboratorsController < ApplicationController
   def create
-    wiki = Wiki.find(params[:wiki_id])
+    @wiki = Wiki.find(params[:wiki_id])
+    @user = User.where('email LIKE ?', "%#{params[:search]}%").first
 
-    unless wiki.collaborators.find_by_user_id(current_user.id)
-      collaborator = current_user.collaborators.build(wiki: wiki)
+    if @user
+      unless @wiki.collaborators.any?{ |c| c.user_id == @user.id }
+        @collaborator = Collaborator.new(wiki: @wiki, user: @user)
+      else
+        flash[:alert] = "That user is already a collaborator."
+        redirect_back(fallback_location: @wiki)
+        return
+      end
     else
-      flash[:alert] = "That user is already a collaborator."
-      redirect_to :back
+      flash[:alert] = "That user is invalid. Please try again."
+      rredirect_back(fallback_location: @wiki)
       return
     end
 
-    if collaborator.save
+    if @collaborator.save
       flash[:notice] = "Collaborator added."
     else
-      flash[:alert] = "There was an error adding the collaborator."
+      flash[:alert] = "There was an error adding the collaborator. Please try again."
     end
 
-    redirect_to :back
+    redirect_back(fallback_location: @wiki)
   end
 
   def destroy
-    wiki = Wiki.find(params[:wiki_id])
-    collaborator = wiki.collaborators.find(params[:id])
+    @wiki = Wiki.find(params[:wiki_id])
+    @collaborator = @wiki.collaborators.find(params[:id])
 
-    if collaborator.destroy
+    if @collaborator.destroy
       flash[:notice] = "Collaborator removed."
     else
       flash[:alert] = "There was an error removing the collaborator."
     end
 
-    redirect_to :back
+    redirect_back(fallback_location: @wiki)
   end
 end

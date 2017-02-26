@@ -1,0 +1,32 @@
+<div class="collaborators">
+  <h4>Collaborators</h4>
+  <% if wiki.collaborators.any? %>
+    <ul>
+      <% wiki.collaborators.each do |c| %>
+        <li class="btn btn-default"><%= c.user.first_name + " " + c.user.last_name %>
+          <!-- only admins or the owner of the wiki can remove collaborators -->
+          <% if current_user.admin? || wiki.user_id == current_user.id %>
+            <%= link_to [wiki, Collaborator.find_by_user_id(c.user.id)], method: :delete do %>
+              <b>&times;</b>
+            <% end %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>No collaborators yet!</p>
+  <% end %>
+
+  <% if current_user.admin? || current_user.role == "premium" %>
+    <div class="row">
+      <%= form_tag [wiki, Collaborator.new] do %>
+        <div class="col-md-8">
+          <%= text_field_tag :search, params[:search], class: "form-control", placeholder: "Enter new collaborator email" %>
+        </div>
+        <div class="col-md-4">
+          <%= submit_tag "Add collaborator", class: 'btn btn-primary pull-right' %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>
