@@ -2,9 +2,16 @@
   <div class="col-md-12">
     <div class="media">
       <br>
-      <div class="media-left">
-        <img class="media-object" src="http://placehold.it/128x128/eee/">
-      </div>
+      <% avatar_url = @user.avatar_url(128) %>
+      <% if avatar_url %>
+        <div class="media-left">
+          <%= image_tag avatar_url, class: 'media-object' %>
+        </div>
+      <% else %>
+        <div class="media-left">
+          <img class="media-object" src="http://placehold.it/128x128/eee/">
+        </div>
+      <% end %>
       <div class="media-body">
         <h1 class="media-heading"><%= @user.first_name + " " + @user.last_name %></h1>
         <small>

@@ -5,11 +5,11 @@
 
   <div class="form-group">
     <%= f.label :email %><br />
-    <%= f.email_field :email, class: 'form-control' autofocus: true, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
+    <%= f.email_field :email, class: 'form-control', autofocus: true, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
   </div>
 
   <div class="actions">
-    <%= f.submit "Resend confirmation instructions" %>
+    <%= f.submit "Resend confirmation instructions", class: 'btn btn-primary' %>
   </div>
 <% end %>
 
