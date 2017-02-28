@@ -7,10 +7,6 @@
         <div class="media-left">
           <%= image_tag avatar_url, class: 'media-object' %>
         </div>
-      <% else %>
-        <div class="media-left">
-          <img class="media-object" src="http://placehold.it/128x128/eee/">
-        </div>
       <% end %>
       <div class="media-body">
         <h1 class="media-heading"><%= @user.first_name + " " + @user.last_name %></h1>
@@ -39,9 +35,14 @@
           <% end %>
           <br>
           <small>
-            updated <%= time_ago_in_words(wiki.updated_at) %> ago by <%= updater.first_name + " " + updater.last_name %>
-            <% if updater.admin? %>
-              <span class="info user-role-admin"><%= updater.role %></span>
+            updated <%= time_ago_in_words(wiki.updated_at) %> ago by
+            <% if updater %>
+              <%= updater.first_name + " " + updater.last_name %>
+              <% if updater.admin? %>
+                <span class="info user-role-admin"><%= updater.role %></span>
+              <% end %>
+            <% else %>
+              <i>deleted user</i>
             <% end %>
           </small>
         </p>
@@ -72,9 +73,14 @@
             <% end %>
             <br>
             <small>
-              updated <%= time_ago_in_words(wiki.updated_at) %> ago by <%= updater.first_name + " " + updater.last_name %>
-              <% if updater.admin? %>
-                <span class="info user-role-admin"><%= updater.role %></span>
+              updated <%= time_ago_in_words(wiki.updated_at) %> ago by
+              <% if updater %>
+                <%= updater.first_name + " " + updater.last_name %>
+                <% if updater.admin? %>
+                  <span class="info user-role-admin"><%= updater.role %></span>
+                <% end %>
+              <% else %>
+                <i>deleted user</i>
               <% end %>
             </small>
           </p>

@@ -13,9 +13,14 @@
             <% end %>
           </h4>
           <small>
-            updated <%= time_ago_in_words(wiki.updated_at) %> ago by <%= link_to updater.first_name + " " + updater.last_name, [updater] %>
-            <% if updater.admin? %>
-              <span class="info user-role-admin"><%= updater.role %></span>
+            updated <%= time_ago_in_words(wiki.updated_at) %> ago by
+            <% if updater %>
+              <%= link_to updater.first_name + " " + updater.last_name, [updater] %>
+              <% if updater.admin? %>
+                <span class="info user-role-admin"><%= updater.role %></span>
+              <% end %>
+            <% else %>
+              <i>deleted user</i>
             <% end %>
           </small>
         </div>
