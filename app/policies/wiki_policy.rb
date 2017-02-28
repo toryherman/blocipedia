@@ -11,11 +11,11 @@ class WikiPolicy < ApplicationPolicy
           all.each do |wiki|
             if wiki.private == false || wiki.user == user
               wikis << wiki
-            end
-
-            wiki.collaborators.each do |c|
-              if c.user_id == user.id
-                wikis << wiki
+            else
+              wiki.collaborators.each do |c|
+                if c.user_id == user.id
+                  wikis << wiki
+                end
               end
             end
           end

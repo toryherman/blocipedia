@@ -13,7 +13,7 @@ class CollaboratorsController < ApplicationController
       end
     else
       flash[:alert] = "That user is invalid. Please try again."
-      rredirect_back(fallback_location: @wiki)
+      redirect_back(fallback_location: @wiki)
       return
     end
 

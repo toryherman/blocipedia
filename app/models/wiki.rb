@@ -1,8 +1,12 @@
 class Wiki < ApplicationRecord
+  include ActiveModel::Dirty
+
   belongs_to :user
   has_many :collaborators, dependent: :destroy
 
   after_initialize :init
+
+  default_scope { order(updated_at: :desc) }
 
   validates :title, length: { minimum: 5 }, presence: true
   validates :body, length: { minimum: 20 }, presence: true

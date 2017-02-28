@@ -13,6 +13,9 @@
       <ul class="nav nav-tabs">
         <li><%= link_to "Blocipedia", root_path %></li>
         <li><%= link_to "Wikis", wikis_path %></li>
+        <% if current_user %>
+          <li><%= link_to "Dashboard", [current_user] %></li>
+        <% end %>
 
         <div class="pull-right user-info">
           <% if user_signed_in? %>

@@ -1,0 +1,78 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="media">
+      <br>
+      <div class="media-left">
+        <img class="media-object" src="http://placehold.it/128x128/eee/">
+      </div>
+      <div class="media-body">
+        <h1 class="media-heading"><%= @user.first_name + " " + @user.last_name %></h1>
+        <small>
+          <%= pluralize(@user.wikis.count, 'wiki') %>
+          <% if @user.collaborators.any? %>
+            <br>
+            <%= pluralize(@user.collaborators.count, 'collaborations') %>
+          <% end %>
+        </small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h4>Wikis</h4>
+<div class="row">
+  <div class="col-md-8">
+    <% @user.wikis.each do |wiki| %>
+      <% updater = User.find_by_id(wiki.updated_by) %>
+      <div>
+        <p>
+          <strong><%= link_to wiki.title, [wiki] %></strong>
+          <% if wiki.private %>
+            <span class="info private-post">P</span>
+          <% end %>
+          <br>
+          <small>
+            updated <%= time_ago_in_words(wiki.updated_at) %> ago by <%= updater.first_name + " " + updater.last_name %>
+            <% if updater.admin? %>
+              <span class="info user-role-admin"><%= updater.role %></span>
+            <% end %>
+          </small>
+        </p>
+      </div>
+    <% end %>
+  </div>
+  <div class="col-md-4">
+    <% if @user == current_user %>
+      <div class="col-md-4">
+        <%= link_to "Create new wiki", new_wiki_path, class: 'btn btn-primary' %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% if @user.collaborators.any? %>
+  <h4>Collaborations</h4>
+  <div class="row">
+    <div class="col-md-8">
+      <% @user.collaborators.each do |c| %>
+        <% wiki = Wiki.find(c.wiki_id) %>
+        <% updater = User.find_by_id(wiki.updated_by) %>
+        <div>
+          <p>
+            <strong><%= link_to wiki.title, [wiki] %></strong>
+            <% if wiki.private %>
+              <span class="info private-post">P</span>
+            <% end %>
+            <br>
+            <small>
+              updated <%= time_ago_in_words(wiki.updated_at) %> ago by <%= updater.first_name + " " + updater.last_name %>
+              <% if updater.admin? %>
+                <span class="info user-role-admin"><%= updater.role %></span>
+              <% end %>
+            </small>
+          </p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
